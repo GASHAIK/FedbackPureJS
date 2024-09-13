@@ -47,47 +47,17 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
 
-    <!-- Single merged feedback script -->
-    <script id="feedback-script" src="~/js/feedback.js" data-options='{
-    "buttonText": "Send Feedback",
-    "headerText": "Give Feedback",
-    "textAreaPlaceholder": "What do you want to share?",
-    "submitText": "Submit",
-    "types": [
-        { "text": "General Suggestion", "icon": "😁" },
-        { "text": "Problem", "icon": "💡" },
-        { "text": "Report a Bug", "icon": "🐞" }
-    ]
-    }'>
-    </script>
-
-    <script>
-        // Listen for the custom event
+    <script src="~/js/feedbacktest.js"></script> <!-- Ensure feedback.js is included -->
+    <script type="text/javascript">
         document.addEventListener('feedbackSubmitted', function (event) {
-            // Access the feedback data from event.detail
-            const feedbackData = event.detail;
-            console.log('Feedback Submitted:', feedbackData);
-
-            // You can also send the feedback data to your backend or perform any other logic
-            // Example: Sending feedback data to a server
-            /*
-            fetch('/api/submitFeedback', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(feedbackData),
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Success:', data);
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
-            */
+            var feedbackData = event.detail;
+            console.log('Feedback received:', feedbackData);
+            // Send feedback to server or display feedback data in the DOM
         });
     </script>
+
+
+   
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
