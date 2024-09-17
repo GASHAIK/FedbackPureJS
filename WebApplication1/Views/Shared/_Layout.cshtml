@@ -46,18 +46,92 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-
     <script src="~/js/feedbacktest.js"></script> <!-- Ensure feedback.js is included -->
+
     <script type="text/javascript">
+        // Function to dynamically add CSS for the notification
+        function addNotificationStyles() {
+            var style = document.createElement('style');
+            style.innerHTML = `
+                        /* Notification container */
+                        .custom-notification {
+                            position: fixed;
+                            top: 20px;
+                            left: 50%;
+                            transform: translateX(-50%);
+                            z-index: 9999;
+                            padding: 15px 25px;
+                            border-radius: 5px;
+                            font-size: 16px;
+                            color: white;
+                            display: none; /* Initially hidden */
+                        }
+
+                        /* Success notification */
+                        .custom-notification.success {
+                            background-color: #28a745; /* Green for success */
+                        }
+
+                        /* Error notification */
+                        .custom-notification.error {
+                            background-color: #dc3545; /* Red for error */
+                        }
+
+                        /* Close button for notification */
+                        .custom-notification .close-btn {
+                            margin-left: 20px;
+                            cursor: pointer;
+                            font-weight: bold;
+                            color: white;
+                        }
+                    `;
+            document.head.appendChild(style);
+        }
+
+        // Custom notification function
+        function showNotification(type, message) {
+            // Add notification CSS dynamically
+            addNotificationStyles();
+
+            // Create the notification div
+            var notification = document.createElement('div');
+            notification.classList.add('custom-notification', type);
+            notification.innerHTML = message + '<span class="close-btn">&times;</span>';
+
+            // Add the notification to the body
+            document.body.appendChild(notification);
+
+            // Display the notification with fade-in effect
+            $(notification).fadeIn();
+
+            // Add click event for close button
+            notification.querySelector('.close-btn').addEventListener('click', function () {
+                $(notification).fadeOut(function () {
+                    notification.remove();
+                });
+            });
+
+            // Auto-hide after 3 seconds
+            setTimeout(function () {
+                $(notification).fadeOut(function () {
+                    notification.remove();
+                });
+            }, 3000); // Adjust the delay (3000 ms = 3 seconds)
+        }
+
+        // Listen for the feedbackSubmitted event and show a notification
         document.addEventListener('feedbackSubmitted', function (event) {
             var feedbackData = event.detail;
-            console.log('Feedback received:', feedbackData);
-            // Send feedback to server or display feedback data in the DOM
+
+            // Replace the console.log with the notification
+            if (feedbackData.success) {
+                showNotification('success', 'Feedback received successfully!');
+            } else {
+                showNotification('error', 'Error submitting feedback.');
+            }
         });
     </script>
 
-
-   
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
